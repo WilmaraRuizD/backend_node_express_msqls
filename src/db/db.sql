@@ -38,11 +38,11 @@ CREATE TABLE categoria(
 
  CREATE TABLE libros(
   id INT (10) NOT NULL AUTO_INCREMENT,
-  nombre VARCHAR(200) NOT NULL,
+  nombre VARCHAR(100) NOT NULL,
   autor VARCHAR(50)NOT NULL,
   editorial VARCHAR(10) NOT NULL,
   ano_de_publicacion INT(10)NOT NULL,
-  descripcion VARCHAR(100),
+  descripcion VARCHAR(150),
   pagina INT(10)NOT NULl,
   foto VARCHAR (250)NOT NULL,
   categoria_id INT (10) NOT NULL,
@@ -58,7 +58,7 @@ DESCRIBE libros;
  INSERT INTO libros(nombre,autor,editorial,ano_de_publicacion,descripcion,pagina,foto,categoria_id)VALUES
 
  ("El origen de las especies","Charles Darwin","Editorial ",1859,"La teoría de la evolución, que se explica en el volumen, cambió el mundo para siempre",696,"https://m.media-amazon.com/images/I/61ka1h-XjNL._SL500_.jpg",1),
- ("The Feynman Lectures on Physics","Richard Feynman","Basic Books",2011,"es un conjunto de libros sobre física basado en las conferencias de Richard P. Feynman, premio Nobel de física",1552,"https://images.cdn3.buscalibre.com/fit-in/360x360/f2/db/f2db2b4758f73909ac0e4ae0562b55bb.jpg",1),
+ ("The Feynman Lectures on Physics","Richard Feynman","BasicBooks",2011,"es un conjunto de libros sobre física basado en las conferencias de Richard P. Feynman, premio Nobel de física",1552,"https://images.cdn3.buscalibre.com/fit-in/360x360/f2/db/f2db2b4758f73909ac0e4ae0562b55bb.jpg",1),
  ("Cosmo","Carl Sagan","Editorial Planeta",12,"Cosmos es uno de los libros más famosos de Carl Sagan, y está basado en su archiconocida serie Cosmos: un viaje personal, que él mismo produjo con su esposa Ann Druyan",384,"https://images.cdn2.buscalibre.com/fit-in/360x360/b6/43/b64396bfa3dff8754439f8127768507c.jpg",1),
  ("El gen egoísta","Richard Dawkins","Edición en Español ",1990,"Dawkins expone su idea del gen egoísta como vehículo para explicar cuál es el sujeto de la evolución natural.",424,"https://m.media-amazon.com/images/I/41+p4Z1VHHL._SX313_BO1,204,203,200_.jpg",1),
 ("Pensar rápido, pensar despacio","Daniel Kahneman","DEBATE",2012," Este libro reúne décadas de investigación del autor en colaboración con el psicólogo Amos Tversky.",825,"https://m.media-amazon.com/images/I/41O0Fp-pW3L.jpg",1),
@@ -82,3 +82,77 @@ DESCRIBE libros;
 ("Un mundo feliz","Aldous Huxley","DEBOLSILLO",2003," La aterradora visión del mundo feliz nos descubre una sociedad que ha creído que la ciencia podía solucionar todos sus problemas, desde la lucha de clases al sentido de la vida; pero sólo ha creado una ilusión que necesita del consumo, el sexo recreativo y la droga para no desmoronarse.",256,"https://imagessl7.casadellibro.com/a/l/t7/57/9788497594257.jpg",9),
 ("Scoop","Evelyn Waugh","Back Bay Books", 2012,"Esta divertida novela cuenta la historia de un periodista que es enviado a cubrir la revolución de los estados balcánicos, el problema es que se queda dormido en el tren y termina en el lugar equivocado, pero no deja que eso lo detenga.",304,"https://m.media-amazon.com/images/I/51Ipv1VElwL._SX492_BO1,204,203,200_.jpg",10),
 ("Carry On, Jeeves","P.G. Wodehouse","Wilder Publications",2021,"Este es puro humor británico clásico. La novela de Wodehouse es la historia de un aristócrata inútil, llamado Wooster, y su mayordomo cuidador, Jeeves, quienes constantemente se meten en problemas por culpa del primero",861,"https://m.media-amazon.com/images/I/41iYeCWdAWL.jpg",10);
+
+
+
+ ----Muestra el valor de la tabla                      
+ SELECT * FROM libros;
+
+ ---Crea la tabla usuario 
+
+CREATE TABLE rol(
+  id INT(10) NOT NULL AUTO_INCREMENT,
+  nombre_rol VARCHAR (10) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+DESCRIBE rol;
+
+ INSERT INTO rol(nombre_rol)VALUES
+                ('admin'),
+                ('user');
+ ----Muestra el valor de la tabla                      
+ SELECT * FROM rol;
+
+  -------Se crea tabla 
+CREATE TABLE usuario(
+  id INT (10) NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(200) NOT NULL,
+  apellido VARCHAR(10) NOT NULL,
+  correo VARCHAR(50) NOT NULL,
+  telefono INT(12)NOT NULL,
+  tipo_documento ENUM('C.C', 'T.I', 'C.E', 'PEP', 'DNI', 'PA')NOT NULL,
+  numero_identidad VARCHAR (15)NOT NULL,
+  departamento VARCHAR (30)NOT NULL,
+  ciudad VARCHAR (50)NOT NULL,
+  direccion VARCHAR (50)NOT NULL,
+  clave VARCHAR(10) NOT NULL,
+  rol_id INT (10) NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_rol_id FOREIGN KEY(rol_id)REFERENCES rol(id)
+);
+
+DESCRIBE usuario;
+
+DESCRIBE usuario;
+--Insertar usuario pendiente. 
+ INSERT INTO usuario(nombre,apellido,tipo_documento,correo,clave,foto,rol_id)VALUES
+                ();
+ ----Muestra el valor de la tabla                      
+ SELECT * FROM usuario;
+
+
+CREATE TABLE compras(
+  id INT(10) NOT NULL
+  AUTO_INCREMENT,
+  date_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  valor_total DECIMAL(11,2) NOT NULL,
+  estado VARCHAR (50)NOT NULL,
+   usuario_id INT (10) NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_usuario_id FOREIGN KEY(usuario_id)REFERENCES usuario(id)
+);
+DESCRIBE compras;
+
+CREATE TABLE detalle_compra(
+  id INT(10)NOT NULL AUTO_INCREMENT,
+  cantidad INT(10)NOT NULL,
+  sub_total  DECIMAL(13,2) NOT NULL,
+  libros_id INT (10) NOT NULL,
+  compras_id INT (10) NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_libros_id FOREIGN KEY(libros_id)REFERENCES libros(id),
+  CONSTRAINT fk_compras_id FOREIGN KEY(compras_id)REFERENCES compras(id)
+);
+
+DESCRIBE detalle_compra;

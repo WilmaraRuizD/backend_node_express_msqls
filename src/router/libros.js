@@ -55,20 +55,33 @@ router.get('/filtraCategoria/:categoria_id',(req,res) =>{
 
 //Actualizar libros
 
-router.put('/:id', (req, res) => {
-  const {newmarcas} = req.body;
-  console.log(newmarcas);
+router.put('/:id',(req,res)=>{
+  const {newlibros}=req.body
   const {id} = req.params;
-  console.log(id);
-mysqlConnection.query('UPDATE lineas set ? WHERE id = ?' , [req.body, id], (err, rows) =>{
-  if(!err) {
-   res.json({status: 'lineas Updated'});
-    
-    } else {
-      console.log(err);
-    }
-});
-});
+
+      mysqlConnection.query(`SELECT * FROM libros WHERE id=?`,[id],(err,rows,fields)=>{
+          if(!err){
+              if(id== null){
+                res.status(204).json({ error: 'NO CONTENT BD WLANS BOOKS ' })  
+              }
+              else{
+                if(rows.length>0){
+                  mysqlConnection.query('UPDATE libros set ? WHERE id = ?' , [req.body, id], (err, rows)=>{
+                      if(!err) {
+                       res.json({status: 'libro Updated'});
+                        
+                        } else {
+                          console.log(err);
+                        }
+                      })
+               ;}
+              else{res.status(409).json({ error:` libro con id ${id} no existe `})}}
+            }
+          else
+          {res.status(500).json({ error: 'INTERNAL SERVER ERROR' })}
+      })
+})
+
 
 //crear registro 
 router.post('/',(req,res)=>{
